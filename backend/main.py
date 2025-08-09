@@ -4,7 +4,12 @@ from typing import Dict, Any
 from core.models import SolveEnvelope, SolveResult, RenderEnvelope
 from puzzles.registry import list_puzzles, get_plugin
 
-app = FastAPI(default_response_class=ORJSONResponse)
+app = FastAPI(
+    default_response_class=ORJSONResponse,
+    docs_url="/api/docs",
+    openapi_url="/api/openapi.json",
+    redoc_url=None,
+)
 
 @app.get("/puzzles")
 def puzzles():
