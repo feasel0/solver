@@ -11,11 +11,15 @@ app = FastAPI(
     redoc_url=None,
 )
 
-@app.get("/puzzles")
+@app.get("/api/health")
+def health():
+    return {"ok": True}
+
+@app.get("/api/puzzles")
 def puzzles():
     return {"puzzles": list_puzzles()}
 
-@app.get("/ingest")
+@app.get("/api/ingest")
 async def ingest(type: str = Query(...), **query):
     try:
         plugin = get_plugin(type)
@@ -24,7 +28,7 @@ async def ingest(type: str = Query(...), **query):
     data = await plugin.ingest(query)  # e.g., LightUp needs e=<...>
     return {"type": type, "puzzle": data}
 
-@app.post("/solve")
+@app.post("/api/solve")
 def solve(body: SolveEnvelope) -> SolveResult:
     try:
         plugin = get_plugin(body.type)
@@ -33,7 +37,7 @@ def solve(body: SolveEnvelope) -> SolveResult:
     res = plugin.solve(body.puzzle)
     return SolveResult(**res)
 
-@app.post("/render", response_class=PlainTextResponse)
+@app.post("/api/render", response_class=PlainTextResponse)
 def render(body: RenderEnvelope):
     try:
         plugin = get_plugin(body.type)
