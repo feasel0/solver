@@ -1,0 +1,15 @@
+services:
+  backend:
+    build: ./backend
+    container_name: solver-backend
+    env_file: ./backend/.env
+    ports: ["8000:8000"]
+    shm_size: "1gb"
+
+  frontend:
+    build: ./frontend
+    container_name: solver-frontend
+    environment:
+      NEXT_PUBLIC_API_BASE: "http://localhost:8000"
+    ports: ["3000:3000"]
+    depends_on: [backend]
